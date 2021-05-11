@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.company.project.mapper.ComContrctMapper">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.company.project.entity.ComContrctEntity" id="comContrctMap">
+        <result property="id" column="id"/>
+        <result property="companyName" column="company_name"/>
+        <result property="companyShortName" column="company_short_name"/>
+        <result property="tel" column="tel"/>
+        <result property="fileId" column="file_id"/>
+        <result property="email" column="email"/>
+        <result property="city" column="city"/>
+        <result property="address" column="address"/>
+        <result property="createTime" column="create_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+
+</mapper>
