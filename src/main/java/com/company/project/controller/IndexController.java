@@ -130,4 +130,27 @@ public class IndexController {
     public String sysFiles() {
         return "sysfiles/list";
     }
+
+
+
+    @GetMapping("/comabout")
+    public String comaboutList() {
+        return "com0607/comabout/list";
+    }
+    @GetMapping("/comcontrct")
+    public String comcontrctList() {
+        return "com0607/comcontrct/list";
+    }
+    @GetMapping("/comindex")
+    public String comindexList() {
+        return "com0607/comindex/list";
+    }
+    @GetMapping("/comview")
+    public String comviewList() {
+        return "com0607/comview/list";
+    }
+    @GetMapping("/comworks")
+    public String comworksList() {
+        return "com0607/comworks/list";
+    }
 }

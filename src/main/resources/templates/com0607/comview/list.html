@@ -26,18 +26,6 @@
       </div>
     </div>
         <div class="layui-form-item">
-      <label class="layui-form-label">图片url</label>
-      <div class="layui-input-block">
-        <input type="imgId" name="imgId" placeholder="请输入图片url" autocomplete="off" class="layui-input">
-      </div>
-    </div>
-        <div class="layui-form-item">
-      <label class="layui-form-label">图片是否启用0：不启用；1：启用</label>
-      <div class="layui-input-block">
-        <input type="imgStatus" name="imgStatus" placeholder="请输入图片是否启用0：不启用；1：启用" autocomplete="off" class="layui-input">
-      </div>
-    </div>
-        <div class="layui-form-item">
       <label class="layui-form-label">视频url</label>
       <div class="layui-input-block">
         <input type="videoId" name="videoId" placeholder="请输入视频url" autocomplete="off" class="layui-input">
@@ -144,8 +132,6 @@
           {field: 'id', title: 'id', sort: true},
           {field: 'name', title: '标题', sort: true},
           {field: 'textValue', title: '文本', sort: true},
-          {field: 'imgId', title: '图片url', sort: true},
-          {field: 'imgStatus', title: '图片是否启用0：不启用；1：启用', sort: true},
           {field: 'videoId', title: '视频url', sort: true},
           {field: 'videoStatus', title: '视频是否启用0：不启用；1：启用', sort: true},
           {field: 'remark', title: '备注', sort: true},
@@ -181,8 +167,6 @@
           $(".operation input[name=id]").val("");
           $(".operation input[name=name]").val("");
           $(".operation input[name=textValue]").val("");
-          $(".operation input[name=imgId]").val("");
-          $(".operation input[name=imgStatus]").val("");
           $(".operation input[name=videoId]").val("");
           $(".operation input[name=videoStatus]").val("");
           $(".operation input[name=remark]").val("");
@@ -207,8 +191,6 @@
           $(".operation input[name=id]").val(data.id);
           $(".operation input[name=name]").val(data.name);
           $(".operation input[name=textValue]").val(data.textValue);
-          $(".operation input[name=imgId]").val(data.imgId);
-          $(".operation input[name=imgStatus]").val(data.imgStatus);
           $(".operation input[name=videoId]").val(data.videoId);
           $(".operation input[name=videoStatus]").val(data.videoStatus);
           $(".operation input[name=remark]").val(data.remark);

@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 
  * @author wenbin
  * @email *****@mail.com
- * @date 2021-05-11 17:18:10
+ * @date 2021-05-12 09:19:52
  */
 public interface ComViewMapper extends BaseMapper<ComViewEntity> {
 	

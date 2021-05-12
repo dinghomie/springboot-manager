@@ -26,23 +26,15 @@ import com.company.project.service.ComIndexService;
  * @email *****@mail.com
  * @date 2021-05-11 17:18:10
  */
-@Controller
-@RequestMapping("/")
+@RestController
+@RequestMapping("/comIndex")
 public class ComIndexController {
     @Autowired
     private ComIndexService comIndexService;
 
 
-    /**
-    * 跳转到页面
-    */
-    @GetMapping("/index/comIndex")
-    public String comIndex() {
-        return "comindex/list";
-        }
-
     @ApiOperation(value = "新增")
-    @PostMapping("comIndex/add")
+    @PostMapping("/add")
     @RequiresPermissions("comIndex:add")
     @ResponseBody
     public DataResult add(@RequestBody ComIndexEntity comIndex){
@@ -51,7 +43,7 @@ public class ComIndexController {
     }
 
     @ApiOperation(value = "删除")
-    @DeleteMapping("comIndex/delete")
+    @DeleteMapping("/delete")
     @RequiresPermissions("comIndex:delete")
     @ResponseBody
     public DataResult delete(@RequestBody @ApiParam(value = "id集合") List<String> ids){
@@ -60,7 +52,7 @@ public class ComIndexController {
     }
 
     @ApiOperation(value = "更新")
-    @PutMapping("comIndex/update")
+    @PutMapping("/update")
     @RequiresPermissions("comIndex:update")
     @ResponseBody
     public DataResult update(@RequestBody ComIndexEntity comIndex){
@@ -69,7 +61,7 @@ public class ComIndexController {
     }
 
     @ApiOperation(value = "查询分页数据")
-    @PostMapping("comIndex/listByPage")
+    @PostMapping("/listByPage")
     @RequiresPermissions("comIndex:list")
     @ResponseBody
     public DataResult findListByPage(@RequestBody ComIndexEntity comIndex){

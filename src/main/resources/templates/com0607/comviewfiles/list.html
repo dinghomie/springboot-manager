@@ -14,15 +14,21 @@
 <form class="layui-form " action="" lay-filter="info" style="width: 700px;margin-top: 10px">
       <input name="id" hidden/>
         <div class="layui-form-item">
-      <label class="layui-form-label">标题</label>
+      <label class="layui-form-label">项目id</label>
       <div class="layui-input-block">
-        <input type="name" name="name" placeholder="请输入标题" autocomplete="off" class="layui-input">
+        <input type="viewId" name="viewId" placeholder="请输入项目id" autocomplete="off" class="layui-input">
       </div>
     </div>
         <div class="layui-form-item">
-      <label class="layui-form-label">文本</label>
+      <label class="layui-form-label">图片id</label>
       <div class="layui-input-block">
-        <input type="textValue" name="textValue" placeholder="请输入文本" autocomplete="off" class="layui-input">
+        <input type="fileId" name="fileId" placeholder="请输入图片id" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+        <div class="layui-form-item">
+      <label class="layui-form-label">排序</label>
+      <div class="layui-input-block">
+        <input type="sort" name="sort" placeholder="请输入排序" autocomplete="off" class="layui-input">
       </div>
     </div>
         <div class="layui-form-item">
@@ -37,12 +43,6 @@
         <input type="createTime" name="createTime" placeholder="请输入创建时间" autocomplete="off" class="layui-input">
       </div>
     </div>
-        <div class="layui-form-item">
-      <label class="layui-form-label">排序</label>
-      <div class="layui-input-block">
-        <input type="sort" name="sort" placeholder="请输入排序" autocomplete="off" class="layui-input">
-      </div>
-    </div>
   <div class="layui-form-item">
   <div class="layui-input-block">
     <button type="submit" class="layui-btn" lay-submit="" lay-filter="submit">保存</button>
@@ -54,7 +54,7 @@
 </div>
 
 <div class="table_div">
-  <div id="searchParam"  shiro:hasPermission="comAbout:list">
+  <div id="searchParam"  shiro:hasPermission="comViewFiles:list">
     <div class="layui-form-item">
       <div class="layui-input-inline">
         <input type="text" id="key" class="layui-input"  autocomplete="off" placeholder="请输入">
@@ -71,13 +71,13 @@
 </div>
 <script type="text/html" id="toolbar">
   <div class="layui-btn-container">
-    <button class="layui-btn layui-btn-sm" lay-event="add"  shiro:hasPermission="comAbout:add">添加</button>
-    <button class="layui-btn layui-btn-sm" lay-event="batchDeleted" shiro:hasPermission="comAbout:delete">删除</button>
+    <button class="layui-btn layui-btn-sm" lay-event="add"  shiro:hasPermission="comViewFiles:add">添加</button>
+    <button class="layui-btn layui-btn-sm" lay-event="batchDeleted" shiro:hasPermission="comViewFiles:delete">删除</button>
   </div>
 </script>
 <script type="text/html" id="tool">
-  <a class="layui-btn layui-btn-xs" lay-event="edit" shiro:hasPermission="comAbout:update">编辑</a>
-  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" shiro:hasPermission="comAbout:delete">删除</a>
+  <a class="layui-btn layui-btn-xs" lay-event="edit" shiro:hasPermission="comViewFiles:update">编辑</a>
+  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" shiro:hasPermission="comViewFiles:delete">删除</a>
 </script>
 
 </body>
@@ -104,7 +104,7 @@
       , contentType: 'application/json'
       , headers: {"authorization": token}
       , page: true //开启分页
-      , url: '/comAbout/listByPage' //数据接口
+      , url: '/comViewFiles/listByPage' //数据接口
       , method: 'POST'
       , parseData: function (res) { //将原始数据解析成 table 组件所规定的数据
         return {
@@ -118,11 +118,11 @@
         [
           {type: 'checkbox', fixed: 'left'},
           {field: 'id', title: 'id', sort: true},
-          {field: 'name', title: '标题', sort: true},
-          {field: 'textValue', title: '文本', sort: true},
+          {field: 'viewId', title: '项目id', sort: true},
+          {field: 'fileId', title: '图片id', sort: true},
+          {field: 'sort', title: '排序', sort: true},
           {field: 'remark', title: '备注', sort: true},
           {field: 'createTime', title: '创建时间', sort: true},
-          {field: 'sort', title: '排序', sort: true},
           {width: 120, toolbar: "#tool", title: '操作'}
         ]
       ]
@@ -151,11 +151,11 @@
           $(".operation").show();
           $(".title").html("新增");
           $(".operation input[name=id]").val("");
-          $(".operation input[name=name]").val("");
-          $(".operation input[name=textValue]").val("");
+          $(".operation input[name=viewId]").val("");
+          $(".operation input[name=fileId]").val("");
+          $(".operation input[name=sort]").val("");
           $(".operation input[name=remark]").val("");
           $(".operation input[name=createTime]").val("");
-          $(".operation input[name=sort]").val("");
           break;
       };
     });
@@ -173,11 +173,11 @@
           $(".operation").show();
           $(".title").html("编辑");
           $(".operation input[name=id]").val(data.id);
-          $(".operation input[name=name]").val(data.name);
-          $(".operation input[name=textValue]").val(data.textValue);
+          $(".operation input[name=viewId]").val(data.viewId);
+          $(".operation input[name=fileId]").val(data.fileId);
+          $(".operation input[name=sort]").val(data.sort);
           $(".operation input[name=remark]").val(data.remark);
           $(".operation input[name=createTime]").val(data.createTime);
-          $(".operation input[name=sort]").val(data.sort);
           break;
       }
     });
@@ -189,7 +189,7 @@
         limit: 10000,
         key: $("#key").val()
       };
-      CoreUtil.sendPost("/comAbout/listByPage", exportParams, function (res) {
+      CoreUtil.sendPost("/comViewFiles/listByPage", exportParams, function (res) {
         //初始化渲染数据
         if (res.data != null && res.data.records != null) {
           table.exportFile(tableIns1.config.id, res.data.records, 'xls');
@@ -203,7 +203,7 @@
         content: "确定要删除么?",
         yes: function(index, layero){
           layer.close(index); //如果设定了yes回调，需进行手工关闭
-          CoreUtil.sendDelete("/comAbout/delete",ids,function (res) {
+          CoreUtil.sendDelete("/comViewFiles/delete",ids,function (res) {
             layer.msg(res.msg, {time:1000},function () {
               search();
             });
@@ -222,13 +222,13 @@
     //监听保存
     form.on('submit(submit)', function(data){
       if(data.field.id===undefined || data.field.id===null || data.field.id===""){
-        CoreUtil.sendPost("/comAbout/add",data.field,function (res) {
+        CoreUtil.sendPost("/comViewFiles/add",data.field,function (res) {
           $(".table_div").show();
           $(".operation").hide();
           search();
         });
       }else {
-        CoreUtil.sendPut("/comAbout/update",data.field,function (res) {
+        CoreUtil.sendPut("/comViewFiles/update",data.field,function (res) {
           $(".table_div").show();
           $(".operation").hide();
           search();

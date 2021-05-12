@@ -16,7 +16,7 @@ import lombok.Data;
  *
  * @author wenbin
  * @email *****@mail.com
- * @date 2021-05-11 17:18:11
+ * @date 2021-05-12 09:19:52
  */
 @Data
 @TableName("com_about")
@@ -40,30 +40,6 @@ public class ComAboutEntity extends BaseEntity implements Serializable {
 	 */
 	@TableField("text_value")
 	private String textValue;
-
-	/**
-	 * 图片url
-	 */
-	@TableField("img_url")
-	private String imgUrl;
-
-	/**
-	 * 图片是否启用0：不启用；1：启用
-	 */
-	@TableField("img_status")
-	private String imgStatus;
-
-	/**
-	 * 视频url
-	 */
-	@TableField("video_url")
-	private String videoUrl;
-
-	/**
-	 * 视频是否启用0：不启用；1：启用
-	 */
-	@TableField("video_status")
-	private String videoStatus;
 
 	/**
 	 * 备注

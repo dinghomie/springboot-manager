@@ -14,13 +14,13 @@ import io.swagger.annotations.ApiParam;
 import java.util.List;
 import com.company.project.common.utils.DataResult;
 
-import com.company.project.entity.ComAboutEntity;
-import com.company.project.service.ComAboutService;
+import com.company.project.entity.ComAboutFilesEntity;
+import com.company.project.service.ComAboutFilesService;
 
 
 
 /**
- * 关于我们
+ * 
  *
  * @author wenbin
  * @email *****@mail.com
@@ -28,56 +28,56 @@ import com.company.project.service.ComAboutService;
  */
 @Controller
 @RequestMapping("/")
-public class ComAboutController {
+public class ComAboutFilesController {
     @Autowired
-    private ComAboutService comAboutService;
+    private ComAboutFilesService comAboutFilesService;
 
 
     /**
     * 跳转到页面
     */
-    @GetMapping("/index/comAbout")
-    public String comAbout() {
-        return "comabout/list";
+    @GetMapping("/index/comAboutFiles")
+    public String comAboutFiles() {
+        return "comaboutfiles/list";
         }
 
     @ApiOperation(value = "新增")
-    @PostMapping("comAbout/add")
-    @RequiresPermissions("comAbout:add")
+    @PostMapping("comAboutFiles/add")
+    @RequiresPermissions("comAboutFiles:add")
     @ResponseBody
-    public DataResult add(@RequestBody ComAboutEntity comAbout){
-        comAboutService.save(comAbout);
+    public DataResult add(@RequestBody ComAboutFilesEntity comAboutFiles){
+        comAboutFilesService.save(comAboutFiles);
         return DataResult.success();
     }
 
     @ApiOperation(value = "删除")
-    @DeleteMapping("comAbout/delete")
-    @RequiresPermissions("comAbout:delete")
+    @DeleteMapping("comAboutFiles/delete")
+    @RequiresPermissions("comAboutFiles:delete")
     @ResponseBody
     public DataResult delete(@RequestBody @ApiParam(value = "id集合") List<String> ids){
-        comAboutService.removeByIds(ids);
+        comAboutFilesService.removeByIds(ids);
         return DataResult.success();
     }
 
     @ApiOperation(value = "更新")
-    @PutMapping("comAbout/update")
-    @RequiresPermissions("comAbout:update")
+    @PutMapping("comAboutFiles/update")
+    @RequiresPermissions("comAboutFiles:update")
     @ResponseBody
-    public DataResult update(@RequestBody ComAboutEntity comAbout){
-        comAboutService.updateById(comAbout);
+    public DataResult update(@RequestBody ComAboutFilesEntity comAboutFiles){
+        comAboutFilesService.updateById(comAboutFiles);
         return DataResult.success();
     }
 
     @ApiOperation(value = "查询分页数据")
-    @PostMapping("comAbout/listByPage")
-    @RequiresPermissions("comAbout:list")
+    @PostMapping("comAboutFiles/listByPage")
+    @RequiresPermissions("comAboutFiles:list")
     @ResponseBody
-    public DataResult findListByPage(@RequestBody ComAboutEntity comAbout){
-        Page page = new Page(comAbout.getPage(), comAbout.getLimit());
-        LambdaQueryWrapper<ComAboutEntity> queryWrapper = Wrappers.lambdaQuery();
+    public DataResult findListByPage(@RequestBody ComAboutFilesEntity comAboutFiles){
+        Page page = new Page(comAboutFiles.getPage(), comAboutFiles.getLimit());
+        LambdaQueryWrapper<ComAboutFilesEntity> queryWrapper = Wrappers.lambdaQuery();
         //查询条件示例
-        //queryWrapper.eq(ComAboutEntity::getId, comAbout.getId());
-        IPage<ComAboutEntity> iPage = comAboutService.page(page, queryWrapper);
+        //queryWrapper.eq(ComAboutFilesEntity::getId, comAboutFiles.getId());
+        IPage<ComAboutFilesEntity> iPage = comAboutFilesService.page(page, queryWrapper);
         return DataResult.success(iPage);
     }
 

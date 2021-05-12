@@ -12,15 +12,15 @@ import java.util.Date;
 import lombok.Data;
 
 /**
- * 品牌观
+ * 
  *
  * @author wenbin
  * @email *****@mail.com
  * @date 2021-05-12 09:19:52
  */
 @Data
-@TableName("com_view")
-public class ComViewEntity extends BaseEntity implements Serializable {
+@TableName("com_about_files")
+public class ComAboutFilesEntity extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -30,28 +30,22 @@ public class ComViewEntity extends BaseEntity implements Serializable {
 	private String id;
 
 	/**
-	 * 标题
+	 * 项目id
 	 */
-	@TableField("name")
-	private String name;
+	@TableField("about_id")
+	private String aboutId;
 
 	/**
-	 * 文本
+	 * 图片id
 	 */
-	@TableField("text_value")
-	private String textValue;
+	@TableField("file_id")
+	private String fileId;
 
 	/**
-	 * 视频url
+	 * 排序
 	 */
-	@TableField("video_id")
-	private String videoId;
-
-	/**
-	 * 视频是否启用0：不启用；1：启用
-	 */
-	@TableField("video_status")
-	private String videoStatus;
+	@TableField("sort")
+	private Integer sort;
 
 	/**
 	 * 备注
@@ -64,12 +58,6 @@ public class ComViewEntity extends BaseEntity implements Serializable {
 	 */
 	@TableField("create_time")
 	private Date createTime;
-
-	/**
-	 * 排序
-	 */
-	@TableField("sort")
-	private Integer sort;
 
 
 }
