@@ -11,6 +11,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+
+import java.util.Date;
 import java.util.List;
 import com.company.project.common.utils.DataResult;
 
@@ -38,6 +40,7 @@ public class ComIndexController {
     @RequiresPermissions("comIndex:add")
     @ResponseBody
     public DataResult add(@RequestBody ComIndexEntity comIndex){
+        comIndex.setCreateTime(new Date());
         comIndexService.save(comIndex);
         return DataResult.success();
     }

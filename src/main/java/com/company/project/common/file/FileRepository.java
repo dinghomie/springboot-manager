@@ -1,5 +1,7 @@
 package com.company.project.common.file;
 import com.company.project.common.utils.DataResult;
+import com.company.project.entity.SysFilesEntity;
+import com.company.project.service.SysFilesService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Repository;
@@ -7,6 +9,7 @@ import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,6 +27,12 @@ public class FileRepository{
     //@Value("${spring.commodityWeight.file.root.path}")
     @Value("${file.path}")
     private String fileRootPath;
+
+    @Value("${file.url}")
+    private String fileUrl;
+
+    @Resource
+    private SysFilesService sysFilesService;
 
     public DataResult uploadFile(MultipartFile file, HttpServletRequest request){
         if (file.isEmpty()){
@@ -50,9 +59,17 @@ public class FileRepository{
             fileOutputStream.flush();
             fileOutputStream.close();
 
-            String basePath= request.getRequestURL().toString();
-            basePath= basePath.replace("file/uploadFile","");
-            return DataResult.success(basePath+"files/"+ LocalDate.now()+"/"+newFileName);
+            String url=fileUrl+ "/"+LocalDate.now()+"/"+newFileName;
+
+            //保存文件记录
+            SysFilesEntity sysFilesEntity = new SysFilesEntity();
+            sysFilesEntity.setFileName(newFileName);
+            sysFilesEntity.setFilePath(filePath+newFileName);
+            sysFilesEntity.setUrl(url);
+            sysFilesEntity.setCreateDate(new Date());
+            sysFilesService.save(sysFilesEntity);
+
+            return DataResult.success(url);
         } catch (IOException e) {
             e.printStackTrace();
         }
