@@ -26,23 +26,15 @@ import com.company.project.service.ComViewService;
  * @email *****@mail.com
  * @date 2021-05-12 09:19:52
  */
-@Controller
-@RequestMapping("/")
+@RestController
+@RequestMapping("/comView")
 public class ComViewController {
     @Autowired
     private ComViewService comViewService;
 
 
-    /**
-    * 跳转到页面
-    */
-    @GetMapping("/index/comView")
-    public String comView() {
-        return "comview/list";
-        }
-
     @ApiOperation(value = "新增")
-    @PostMapping("comView/add")
+    @PostMapping("add")
     @RequiresPermissions("comView:add")
     @ResponseBody
     public DataResult add(@RequestBody ComViewEntity comView){
@@ -51,7 +43,7 @@ public class ComViewController {
     }
 
     @ApiOperation(value = "删除")
-    @DeleteMapping("comView/delete")
+    @DeleteMapping("delete")
     @RequiresPermissions("comView:delete")
     @ResponseBody
     public DataResult delete(@RequestBody @ApiParam(value = "id集合") List<String> ids){
@@ -60,7 +52,7 @@ public class ComViewController {
     }
 
     @ApiOperation(value = "更新")
-    @PutMapping("comView/update")
+    @PutMapping("update")
     @RequiresPermissions("comView:update")
     @ResponseBody
     public DataResult update(@RequestBody ComViewEntity comView){
@@ -69,7 +61,7 @@ public class ComViewController {
     }
 
     @ApiOperation(value = "查询分页数据")
-    @PostMapping("comView/listByPage")
+    @PostMapping("listByPage")
     @RequiresPermissions("comView:list")
     @ResponseBody
     public DataResult findListByPage(@RequestBody ComViewEntity comView){
