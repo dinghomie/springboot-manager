@@ -73,13 +73,19 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">主页视频</label>
-        <div class="layui-input-inline">
-            <button type="button" class="layui-btn upload-image" name="image[]" up-field="path" up-url="/upload/image">
-                <i class="layui-icon"></i>上传视频
+        <div class="layui-upload">
+            <label class="layui-form-label">主页视频</label>
+
+            <button type="button" class="layui-btn" id="videoButton">
+                <i class="layui-icon">&#xe67c;</i>上传视频
             </button>
+            <div class="layui-input-block">
+                <video id="videoDiv" src="" controls width="400px" heigt="400px" style="display: none"></video>
+
+            </div>
+
+
         </div>
-        <div class="upload-show"></div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">启用视频</label>
@@ -95,6 +101,13 @@
         <label class="layui-form-label">详细介绍</label>
         <div class="layui-input-block">
             <textarea placeholder="请输入内容" class="layui-textarea" name="textValue" id="textValue"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序
+        </label>
+        <div class="layui-input-block">
+            <input type="number" name="sort" placeholder="请输入排序" autocomplete="off" class="layui-input">
         </div>
     </div>
   <div class="layui-form-item">
@@ -165,6 +178,7 @@
           {field: 'id', title: 'id', sort: true},
           {field: 'name', title: '首页标题', sort: true},
           {field: 'textValue', title: '详细介绍', sort: true},
+            {field: 'sort', title: '排序', sort: true},
           {width: 120, toolbar: "#tool", title: '操作'}
         ]
       ]
@@ -200,10 +214,13 @@
             $(".operation input[name=id]").val("");
             $(".operation input[name=name]").val("");
             $('#textValue').val("");
-            $(".operation input[name=imgUrl]").val("");
+            document.getElementById("imgDiv").src="";
             $('#imgStatus').val("");
-            $(".operation input[name=videoUrl]").val("");
+
+            document.getElementById("videoDiv").src="";
+
             $('#videoStatus').val("");
+            $('#sort').val("");
             renderForm();
           break;
       };
@@ -225,12 +242,20 @@
           $(".operation input[name=id]").val(data.id);
           $(".operation input[name=name]").val(data.name);
             $('#textValue').val(data.textValue);
-            var img = document.getElementById("imgDiv");
-            img.src = data.imgUrl;
-            img.style='';
+            if(data.imgUrl!=''&&data.imgUrl!=null) {
+                var img = document.getElementById("imgDiv");
+                img.src = data.imgUrl;
+                img.style='';
+            }
+
             $('#imgStatus').val(data.imgStatus);
-          $(".operation input[name=videoUrl]").val(data.videoUrl);
+            if(data.videoUrl!=''&&data.videoUrl!=null){
+                var video = document.getElementById("videoDiv");
+                video.src = data.videoUrl;
+                video.style='';
+            }
             $('#videoStatus').val(data.videoStatus);
+            $(".operation input[name=sort]").val(data.sort);
             renderForm();
           break;
       }
@@ -276,6 +301,8 @@
     //监听保存
     form.on('submit(submit)', function(data){
         data.field.imgUrl= document.getElementById("imgDiv").src;
+        data.field.videoUrl= document.getElementById("videoDiv").src;
+
 
         if(data.field.id===undefined || data.field.id===null || data.field.id===""){
         CoreUtil.sendPost("/comIndex/add",data.field,function (res) {
@@ -331,7 +358,31 @@
           //请求异常回调
       }
   });
+  var uploadInstVideo = upload.render({
+      elem: '#videoButton' //绑定元素
+      ,url: '/file/uploadFile' //上传接口
+      ,cache: false,
+      async: true,
+      accept: 'video',
+      contentType: 'application/json; charset=UTF-8',
+      dataType: "json",
+      headers:{authorization:CoreUtil.getData("access_token")}
 
+      ,done: function(res){
+          if(res.code==0){
+              //上传完毕回调
+              var video = document.getElementById("videoDiv");
+              video.src = res.data;
+              video.style='';
+          }else{
+              layui.open("上传失败")
+          }
+
+      }
+      ,error: function(){
+          //请求异常回调
+      }
+  });
   var oImg = document.getElementById("imgDiv");
   oImg.onclick = function(){
       var _this = $(this);//将当前的pimg元素作为_this传入函数
