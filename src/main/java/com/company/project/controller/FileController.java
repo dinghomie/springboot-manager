@@ -30,8 +30,8 @@ public class FileController {
 
     @ApiOperation(value = "文件上传")
     @PostMapping("/uploadFile")
-    public DataResult uploadFile(MultipartFile file, HttpServletRequest request){
-        return fileRepository.uploadFile(file,request);
+    public DataResult uploadFile(MultipartFile file,String tableId,String tableName, HttpServletRequest request){
+        return fileRepository.uploadFile(file,tableId,tableName,request);
     }
 
     //多文件上传

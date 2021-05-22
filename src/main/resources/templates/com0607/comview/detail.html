@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/custom.form.css">
+</head>
+<body>
+<div class="panel panel-default operation">
+    <div class="panel-heading title"></div>
+    <div class="layui-card-body">
+        <form class="layui-form " action="" lay-filter="info" style="width: 700px;margin-top: 10px">
+            <input name="id" hidden id="id"/>
+            <input name="id" hidden id="type"/>
+            <div class="layui-form-item">
+                <label class="layui-form-label">标题</label>
+                <div class="layui-input-block">
+                    <input type="name" name="name" placeholder="请输入标题" autocomplete="off" class="layui-input" id="name">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-upload">
+                    <label class="layui-form-label">主页视频</label>
+
+                    <button type="button" class="layui-btn" id="videoButton">
+                        <i class="layui-icon">&#xe67c;</i>上传视频
+                    </button>
+                    <div class="layui-input-block">
+                        <video id="videoDiv" src="" controls width="400px" heigt="400px" style="display: none"></video>
+
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">启用视频</label>
+                <div class="layui-input-block">
+                    <select  name="videoStatus" lay-verify="" lay-filter="videoStatus" id="videoStatus">
+                        <option value="">请选择</option>
+                        <option value="0">不启用</option>
+                        <option value="1">启用</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">详细介绍</label>
+                <div class="layui-input-block">
+                    <textarea placeholder="请输入内容" class="layui-textarea" name="textValue" id="textValue"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">排序
+                </label>
+                <div class="layui-input-block">
+                    <input type="number" name="sort" placeholder="请输入排序" autocomplete="off" class="layui-input" id="sort">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="submit" id="submit">保存</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+</body>
+</html>
+<script src="/layui/layui.all.js"></script>
+<script src="/js/core.util.js"></script>
+<script>
+    //获取token
+    var token = CoreUtil.getData("access_token");
+    //地址栏转义token中的#号
+    var tokenQuery = token.replace("#", "%23");
+    var tableIns1;
+    var table = layui.table;
+    var form = layui.form;
+    var layer = layui.layer;
+    var $ = jQuery = layui.jquery;
+    var laydate = layui.laydate;
+    var upload = layui.upload;
+    var tabId = getQueryString("tabId");
+    var tabId2 = new Date().getTime();
+
+
+
+
+    var id = getQueryString("id");
+    if(id===null||id===""){
+        document.getElementById("id").value=guid();
+        document.getElementById("type").value=0;
+    }else{
+        CoreUtil.sendPost("/comView/getOne",{"id":id},function (res) {
+            $('#name').val(res.data.name);
+            $('#id').val(res.data.id);
+            var video = document.getElementById("videoDiv");
+            video.src = res.data.videoUrl;
+            video.style='';
+            $('#videoStatus').val(res.data.videoStatus);
+            layui.form.render("select");//layUI设置
+            $('#textValue').val(res.data.textValue);
+            $('#sort').val(res.data.sort);
+
+        });
+        document.getElementById("type").value=1;
+    }
+
+    layui.use(['table', 'layer', 'laydate'], function () {
+
+
+
+        //监听保存
+        form.on('submit(submit)', function(data){
+            data.field.videoUrl= document.getElementById("videoDiv").src;
+            data.field.id=document.getElementById("id").value;
+            if(document.getElementById("type").value==0){
+
+                CoreUtil.sendPost("/comView/add",data.field,function (res) {
+
+                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                    parent.location.reload();//刷新父页面，注意一定要在关闭当前iframe层之前执行刷新
+                    parent.layer.close(index); //再执行关闭
+
+                });
+            }else {
+                CoreUtil.sendPut("/comView/update",data.field,function (res) {
+
+                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                    parent.location.reload();//刷新父页面，注意一定要在关闭当前iframe层之前执行刷新
+                    parent.layer.close(index); //再执行关闭
+                });
+            }
+
+            return false;
+        });
+      /*  $(document).on('click',"#open2",function(){
+            /!*  var index = parent.layer.getFrameIndex(window.name);
+              parent.layer.close(index);
+              window.parent.location.reload();*!/
+            //document.getElementById("submit").click;
+            //window.parent.active.tabDelete(tabId2);
+            //window.parent.active.tabAdd("/index/comviewFileList?tableName=comView&&id="+document.getElementById("id").value, tabId2, "图片列表")
+            //window.parent.active.tabChange(tabId2);
+            var index = layer.open({
+                type: 2,
+                title: '图片列表',
+                content: '/index/comviewFileList?tableName=comView&&id='+document.getElementById("id").value,
+                area: ['85%', '85%'],
+                maxmin: true,
+
+            });
+        });*/
+
+    });
+
+
+    var uploadInstVideo = upload.render({
+        elem: '#videoButton' //绑定元素
+        ,url: '/file/uploadFile' //上传接口
+        ,cache: false,
+        async: true,
+        accept: 'video',
+        contentType: 'application/json; charset=UTF-8',
+        dataType: "json",
+        headers:{authorization:CoreUtil.getData("access_token")}
+
+        ,done: function(res){
+            if(res.code==0){
+                //上传完毕回调
+                var video = document.getElementById("videoDiv");
+                video.src = res.data;
+                video.style='';
+            }else{
+                layui.open("上传失败")
+            }
+
+        }
+        ,error: function(){
+            //请求异常回调
+        }
+    });
+
+    function guid() {
+        function S4() {
+            return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+        }
+
+        return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+    }
+    function getQueryString(name) {
+        var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) {
+            return unescape(r[2]);
+        }
+        return null;
+    }
+   /* $(document).on('click',"#open2",function(){
+
+        //document.getElementById("submit").click;
+        //window.parent.active.tabDelete(tabId2);
+        //window.parent.active.tabAdd("/index/comviewFileList?tableName=comView&&id="+document.getElementById("id").value, tabId2, "图片列表")
+        //window.parent.active.tabChange(tabId2);
+        var index = layer.open({
+            type: 2,
+            title: '图片列表',
+            content: '/index/comviewFileList?tableName=comView&&id='+document.getElementById("id").value,
+            area: ['85%', '85%'],
+            maxmin: true,
+
+        });
+
+    });*/
+</script>

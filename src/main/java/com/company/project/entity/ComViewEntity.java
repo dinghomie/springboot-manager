@@ -45,8 +45,8 @@ public class ComViewEntity extends BaseEntity implements Serializable {
 	/**
 	 * 视频url
 	 */
-	@TableField("video_id")
-	private String videoId;
+	@TableField("video_url")
+	private String videoUrl;
 
 	/**
 	 * 视频是否启用0：不启用；1：启用
@@ -72,5 +72,6 @@ public class ComViewEntity extends BaseEntity implements Serializable {
 	@TableField("sort")
 	private Integer sort;
 
+	@TableField(exist = false)
 	private List<ComViewFilesEntity> comViewFilesEntityList;
 }

@@ -34,7 +34,7 @@ public class FileRepository{
     @Resource
     private SysFilesService sysFilesService;
 
-    public DataResult uploadFile(MultipartFile file, HttpServletRequest request){
+    public DataResult uploadFile(MultipartFile file,String tableId,String tableName, HttpServletRequest request){
         if (file.isEmpty()){
             return DataResult.fail("上传的文件不能为空！请重新上传");
         }
@@ -67,6 +67,8 @@ public class FileRepository{
             sysFilesEntity.setFilePath(filePath+newFileName);
             sysFilesEntity.setUrl(url);
             sysFilesEntity.setCreateDate(new Date());
+            sysFilesEntity.setTableId(tableId);
+            sysFilesEntity.setTableName(tableName);
             sysFilesService.save(sysFilesEntity);
 
             return DataResult.success(url);

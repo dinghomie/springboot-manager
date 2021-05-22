@@ -149,6 +149,14 @@ public class IndexController {
     public String comviewList() {
         return "com0607/comview/list";
     }
+    @GetMapping("/comviewDetail")
+    public String comviewDetail() {
+        return "com0607/comview/detail";
+    }
+    @GetMapping("/comviewFileList")
+    public String comviewFileList() {
+        return "com0607/comview/fileList";
+    }
     @GetMapping("/comworks")
     public String comworksList() {
         return "com0607/comworks/list";

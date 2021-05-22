@@ -2,6 +2,7 @@ package com.company.project.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.company.project.entity.SysFilesEntity;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -69,8 +70,15 @@ public class ComViewController {
         LambdaQueryWrapper<ComViewEntity> queryWrapper = Wrappers.lambdaQuery();
         //查询条件示例
         //queryWrapper.eq(ComViewEntity::getId, comView.getId());
+        queryWrapper.orderByDesc(ComViewEntity::getSort);
         IPage<ComViewEntity> iPage = comViewService.page(page, queryWrapper);
         return DataResult.success(iPage);
     }
-
+    @ApiOperation(value = "获取详情")
+    @PostMapping("getOne")
+    @RequiresPermissions("comView:list")
+    @ResponseBody
+    public DataResult getOne(@RequestBody ComViewEntity comView){
+        return DataResult.success(comViewService.getById(comView.getId()));
+    }
 }
