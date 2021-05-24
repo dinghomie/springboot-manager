@@ -2,6 +2,7 @@ package com.company.project.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.company.project.entity.ComViewEntity;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -70,6 +71,8 @@ public class ComIndexController {
     public DataResult findListByPage(@RequestBody ComIndexEntity comIndex){
         Page page = new Page(comIndex.getPage(), comIndex.getLimit());
         LambdaQueryWrapper<ComIndexEntity> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.orderByDesc(ComIndexEntity::getSort);
+
         //查询条件示例
         //queryWrapper.eq(ComIndexEntity::getId, comIndex.getId());
         IPage<ComIndexEntity> iPage = comIndexService.page(page, queryWrapper);

@@ -50,8 +50,8 @@ public class ComContrctEntity extends BaseEntity implements Serializable {
 	/**
 	 * 二维码图片id
 	 */
-	@TableField("file_id")
-	private String fileId;
+	@TableField("img_url")
+	private String imgUrl;
 
 	/**
 	 * 邮箱

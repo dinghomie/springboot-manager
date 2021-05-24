@@ -19,16 +19,19 @@
         <input type="workName" name="workName" placeholder="请输入项目名称" autocomplete="off" class="layui-input">
       </div>
     </div>
-        <div class="layui-form-item">
-      <label class="layui-form-label">文本</label>
-      <div class="layui-input-block">
-        <input type="textValue" name="textValue" placeholder="请输入文本" autocomplete="off" class="layui-input">
-      </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">详细介绍</label>
+        <div class="layui-input-block">
+            <textarea placeholder="请输入内容" class="layui-textarea" name="textValue" id="textValue"></textarea>
+        </div>
     </div>
         <div class="layui-form-item">
       <label class="layui-form-label">项目时间</label>
       <div class="layui-input-block">
-        <input type="workTime" name="workTime" placeholder="请输入项目时间" autocomplete="off" class="layui-input">
+          <div class="layui-input-inline">
+
+              <input type="text" class="layui-input" id="workTime" placeholder="yyyy-MM-dd" >
+          </div>
       </div>
     </div>
         <div class="layui-form-item">
@@ -38,23 +41,21 @@
       </div>
     </div>
         <div class="layui-form-item">
-      <label class="layui-form-label">类型0:logo;1:buis;2:package;3:space;4:sign</label>
+      <label class="layui-form-label">类型</label>
       <div class="layui-input-block">
-        <input type="status" name="status" placeholder="请输入类型0:logo;1:buis;2:package;3:space;4:sign" autocomplete="off" class="layui-input">
+
+          <select  name="status" lay-verify="" lay-filter="status" id="status">
+              <option value="">请选择</option>
+              <option value="0">logo</option>
+              <option value="1">buis</option>
+              <option value="2">package</option>
+              <option value="3">space</option>
+              <option value="4">sign</option>
+
+          </select>
       </div>
     </div>
-        <div class="layui-form-item">
-      <label class="layui-form-label">备注</label>
-      <div class="layui-input-block">
-        <input type="remark" name="remark" placeholder="请输入备注" autocomplete="off" class="layui-input">
-      </div>
-    </div>
-        <div class="layui-form-item">
-      <label class="layui-form-label">创建时间</label>
-      <div class="layui-input-block">
-        <input type="createTime" name="createTime" placeholder="请输入创建时间" autocomplete="off" class="layui-input">
-      </div>
-    </div>
+
         <div class="layui-form-item">
       <label class="layui-form-label">排序</label>
       <div class="layui-input-block">
@@ -73,16 +74,19 @@
 
 <div class="table_div">
   <div id="searchParam"  shiro:hasPermission="comWorks:list">
-    <div class="layui-form-item">
-      <div class="layui-input-inline">
-        <input type="text" id="key" class="layui-input"  autocomplete="off" placeholder="请输入">
-      </div>
+      <div class="layui-form-item">
+          <label class="layui-form-label">项目名称</label>
 
-      <div class="layui-input-inline ">
-        <button class="layui-btn" onclick="search()"  id="search">查询</button>
-        <button class="layui-btn"   id="export">导出全部</button>
+          <div class="layui-input-inline">
+              <input type="text" id="workName" class="layui-input"  autocomplete="off" placeholder="请输入">
+          </div>
+
+
+          <div class="layui-input-inline ">
+              <button class="layui-btn" onclick="search()"  id="search">查询</button>
+              <button class="layui-btn"   id="export">导出全部</button>
+          </div>
       </div>
-    </div>
 
   </div>
   <table class="layui-table" id="showTable" lay-filter="showTable" ></table>
@@ -95,6 +99,7 @@
 </script>
 <script type="text/html" id="tool">
   <a class="layui-btn layui-btn-xs" lay-event="edit" shiro:hasPermission="comWorks:update">编辑</a>
+  <a class="layui-btn layui-btn-xs" lay-event="addPic" shiro:hasPermission="comWorks:update">添加图片</a>
   <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" shiro:hasPermission="comWorks:delete">删除</a>
 </script>
 
@@ -114,6 +119,9 @@
   var $ = jQuery = layui.jquery;
   var laydate = layui.laydate;
 
+  laydate.render({
+      elem: '#workTime'
+  });
   layui.use(['table', 'layer', 'laydate'], function () {
 
     //加载table
@@ -138,13 +146,15 @@
           {field: 'id', title: 'id', sort: true},
           {field: 'workName', title: '项目名称', sort: true},
           {field: 'textValue', title: '文本', sort: true},
-          {field: 'workTime', title: '项目时间', sort: true},
+          {field: 'workTime', title: '项目时间', sort: true,templet: function (d) {
+                  return d.workTime==null?"":d.workTime;
+              }},
           {field: 'custom', title: '服务客户', sort: true},
-          {field: 'status', title: '类型0:logo;1:buis;2:package;3:space;4:sign', sort: true},
-          {field: 'remark', title: '备注', sort: true},
-          {field: 'createTime', title: '创建时间', sort: true},
+          {field: 'status', title: '类型', sort: true, templet: function (d) {
+                  return d.status==""?"":d.status==0?"logo":d.status==1?"buis":d.status==2?"package":d.status==3?"space":d.status==4?"sign":d.status;
+    }},
           {field: 'sort', title: '排序', sort: true},
-          {width: 120, toolbar: "#tool", title: '操作'}
+          {width: 200, toolbar: "#tool", title: '操作'}
         ]
       ]
       , toolbar: '#toolbar'
@@ -174,13 +184,13 @@
           $(".operation input[name=id]").val("");
           $(".operation input[name=workName]").val("");
           $(".operation input[name=textValue]").val("");
-          $(".operation input[name=workTime]").val("");
-          $(".operation input[name=custom]").val("");
-          $(".operation input[name=status]").val("");
-          $(".operation input[name=remark]").val("");
-          $(".operation input[name=createTime]").val("");
-          $(".operation input[name=sort]").val("");
-          break;
+            $('#workTime').val("");
+
+            $(".operation input[name=custom]").val("");
+            $('#status').val("");
+            $(".operation input[name=sort]").val("");
+
+            break;
       };
     });
     //列操作
@@ -198,14 +208,29 @@
           $(".title").html("编辑");
           $(".operation input[name=id]").val(data.id);
           $(".operation input[name=workName]").val(data.workName);
-          $(".operation input[name=textValue]").val(data.textValue);
-          $(".operation input[name=workTime]").val(data.workTime);
-          $(".operation input[name=custom]").val(data.custom);
-          $(".operation input[name=status]").val(data.status);
-          $(".operation input[name=remark]").val(data.remark);
-          $(".operation input[name=createTime]").val(data.createTime);
-          $(".operation input[name=sort]").val(data.sort);
-          break;
+            $('#workTime').val(data.workTime);
+
+            $(".operation input[name=custom]").val(data.custom);
+            $('#textValue').val(data.textValue);
+
+            $('#status').val(data.status);
+            $(".operation input[name=sort]").val(data.sort);
+            renderForm();
+
+            break;
+          case 'addPic':
+              /* window.parent.active.tabDelete(tabId);
+               window.parent.active.tabAdd("/index/comviewDetail", tabId, "品牌观新增")
+               window.parent.active.tabChange(tabId);*/
+              var index = layer.open({
+                  type: 2,
+                  title: '新增图片',
+                  content: '/index/comviewFileList?tableName=comWorks&&id='+obj.data.id,
+                  area: ['85%', '85%'],
+                  maxmin: true,
+
+              });
+              break;
       }
     });
 
@@ -214,7 +239,7 @@
       //原先分页limit
       var exportParams = {
         limit: 10000,
-        key: $("#key").val()
+          workName: $("#workName").val()
       };
       CoreUtil.sendPost("/comWorks/listByPage", exportParams, function (res) {
         //初始化渲染数据
@@ -248,6 +273,7 @@
 
     //监听保存
     form.on('submit(submit)', function(data){
+        data.field.workTime= $('#workTime').val();
       if(data.field.id===undefined || data.field.id===null || data.field.id===""){
         CoreUtil.sendPost("/comWorks/add",data.field,function (res) {
           $(".table_div").show();
@@ -265,13 +291,18 @@
       return false;
     });
   });
-
+  function renderForm() {
+      layui.use('form', function() {
+          var form = layui.form;
+          form.render();
+      });
+  }
   //执行查询
   function search() {
     //这里以搜索为例
     tableIns1.reload({
       where: { //设定异步数据接口的额外参数，任意设
-        key: $("#key").val()
+          workName: $("#workName").val()
       }
       , page: {
         curr: 1 //重新从第 1 页开始

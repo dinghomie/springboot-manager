@@ -33,9 +33,16 @@
     </div>
         <div class="layui-form-item">
       <label class="layui-form-label">二维码图片id</label>
-      <div class="layui-input-block">
-        <input type="fileId" name="fileId" placeholder="请输入二维码图片id" autocomplete="off" class="layui-input">
-      </div>
+
+            <button type="button" class="layui-btn" id="test1">
+                <i class="layui-icon">&#xe67c;</i>上传图片
+            </button>
+            <!--
+                        <label>(建议大小1111*1111)</label>
+            -->
+            <div class="layui-input-block">
+                <img src="" alt="" height="80px" width="80px" style="display: none" id="imgDiv">
+            </div>
     </div>
         <div class="layui-form-item">
       <label class="layui-form-label">邮箱</label>
@@ -55,18 +62,8 @@
         <input type="address" name="address" placeholder="请输入详细地址" autocomplete="off" class="layui-input">
       </div>
     </div>
-        <div class="layui-form-item">
-      <label class="layui-form-label">创建时间</label>
-      <div class="layui-input-block">
-        <input type="createTime" name="createTime" placeholder="请输入创建时间" autocomplete="off" class="layui-input">
-      </div>
-    </div>
-        <div class="layui-form-item">
-      <label class="layui-form-label">备注</label>
-      <div class="layui-input-block">
-        <input type="remark" name="remark" placeholder="请输入备注" autocomplete="off" class="layui-input">
-      </div>
-    </div>
+
+
   <div class="layui-form-item">
   <div class="layui-input-block">
     <button type="submit" class="layui-btn" lay-submit="" lay-filter="submit">保存</button>
@@ -80,14 +77,7 @@
 <div class="table_div">
   <div id="searchParam"  shiro:hasPermission="comContrct:list">
     <div class="layui-form-item">
-      <div class="layui-input-inline">
-        <input type="text" id="key" class="layui-input"  autocomplete="off" placeholder="请输入">
-      </div>
 
-      <div class="layui-input-inline ">
-        <button class="layui-btn" onclick="search()"  id="search">查询</button>
-        <button class="layui-btn"   id="export">导出全部</button>
-      </div>
     </div>
 
   </div>
@@ -119,6 +109,8 @@
   var layer = layui.layer;
   var $ = jQuery = layui.jquery;
   var laydate = layui.laydate;
+  var upload = layui.upload;
+
 
   layui.use(['table', 'layer', 'laydate'], function () {
 
@@ -145,12 +137,9 @@
           {field: 'companyName', title: '公司名称', sort: true},
           {field: 'companyShortName', title: '公司简称', sort: true},
           {field: 'tel', title: '手机', sort: true},
-          {field: 'fileId', title: '二维码图片id', sort: true},
           {field: 'email', title: '邮箱', sort: true},
           {field: 'city', title: '城市', sort: true},
           {field: 'address', title: '详细地址', sort: true},
-          {field: 'createTime', title: '创建时间', sort: true},
-          {field: 'remark', title: '备注', sort: true},
           {width: 120, toolbar: "#tool", title: '操作'}
         ]
       ]
@@ -182,12 +171,10 @@
           $(".operation input[name=companyName]").val("");
           $(".operation input[name=companyShortName]").val("");
           $(".operation input[name=tel]").val("");
-          $(".operation input[name=fileId]").val("");
+            document.getElementById("imgDiv").src="";
           $(".operation input[name=email]").val("");
           $(".operation input[name=city]").val("");
           $(".operation input[name=address]").val("");
-          $(".operation input[name=createTime]").val("");
-          $(".operation input[name=remark]").val("");
           break;
       };
     });
@@ -208,8 +195,12 @@
           $(".operation input[name=companyName]").val(data.companyName);
           $(".operation input[name=companyShortName]").val(data.companyShortName);
           $(".operation input[name=tel]").val(data.tel);
-          $(".operation input[name=fileId]").val(data.fileId);
-          $(".operation input[name=email]").val(data.email);
+            if(data.imgUrl!=''&&data.imgUrl!=null) {
+                var img = document.getElementById("imgDiv");
+                img.src = data.imgUrl;
+                img.style='';
+            }
+            $(".operation input[name=email]").val(data.email);
           $(".operation input[name=city]").val(data.city);
           $(".operation input[name=address]").val(data.address);
           $(".operation input[name=createTime]").val(data.createTime);
@@ -223,7 +214,6 @@
       //原先分页limit
       var exportParams = {
         limit: 10000,
-        key: $("#key").val()
       };
       CoreUtil.sendPost("/comContrct/listByPage", exportParams, function (res) {
         //初始化渲染数据
@@ -257,7 +247,9 @@
 
     //监听保存
     form.on('submit(submit)', function(data){
-      if(data.field.id===undefined || data.field.id===null || data.field.id===""){
+        data.field.imgUrl= document.getElementById("imgDiv").src;
+
+        if(data.field.id===undefined || data.field.id===null || data.field.id===""){
         CoreUtil.sendPost("/comContrct/add",data.field,function (res) {
           $(".table_div").show();
           $(".operation").hide();
@@ -280,11 +272,34 @@
     //这里以搜索为例
     tableIns1.reload({
       where: { //设定异步数据接口的额外参数，任意设
-        key: $("#key").val()
       }
       , page: {
         curr: 1 //重新从第 1 页开始
       }
     });
   };
+  var uploadInst = upload.render({
+      elem: '#test1' //绑定元素
+      ,url: '/file/uploadFile' //上传接口
+      ,cache: false,
+      async: true,
+      contentType: 'application/json; charset=UTF-8',
+      dataType: "json",
+      headers:{authorization:CoreUtil.getData("access_token")}
+
+      ,done: function(res){
+          if(res.code==0){
+              //上传完毕回调
+              var img = document.getElementById("imgDiv");
+              img.src = res.data;
+              img.style='';
+          }else{
+              layui.open("上传失败")
+          }
+
+      }
+      ,error: function(){
+          //请求异常回调
+      }
+  });
 </script>

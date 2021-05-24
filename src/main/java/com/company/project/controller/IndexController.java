@@ -137,6 +137,10 @@ public class IndexController {
     public String comaboutList() {
         return "com0607/comabout/list";
     }
+    @GetMapping("/comaboutFileList")
+    public String comaboutFileList() {
+        return "com0607/comabout/fileList";
+    }
     @GetMapping("/comcontrct")
     public String comcontrctList() {
         return "com0607/comcontrct/list";

@@ -19,28 +19,18 @@
         <input type="name" name="name" placeholder="请输入标题" autocomplete="off" class="layui-input">
       </div>
     </div>
-        <div class="layui-form-item">
-      <label class="layui-form-label">文本</label>
-      <div class="layui-input-block">
-        <input type="textValue" name="textValue" placeholder="请输入文本" autocomplete="off" class="layui-input">
-      </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">详细介绍</label>
+        <div class="layui-input-block">
+            <textarea placeholder="请输入内容" class="layui-textarea" name="textValue" id="textValue"></textarea>
+        </div>
     </div>
-        <div class="layui-form-item">
-      <label class="layui-form-label">备注</label>
-      <div class="layui-input-block">
-        <input type="remark" name="remark" placeholder="请输入备注" autocomplete="off" class="layui-input">
-      </div>
-    </div>
-        <div class="layui-form-item">
-      <label class="layui-form-label">创建时间</label>
-      <div class="layui-input-block">
-        <input type="createTime" name="createTime" placeholder="请输入创建时间" autocomplete="off" class="layui-input">
-      </div>
-    </div>
+
+
         <div class="layui-form-item">
       <label class="layui-form-label">排序</label>
       <div class="layui-input-block">
-        <input type="sort" name="sort" placeholder="请输入排序" autocomplete="off" class="layui-input">
+        <input type="number" name="sort" placeholder="请输入排序" autocomplete="off" class="layui-input">
       </div>
     </div>
   <div class="layui-form-item">
@@ -56,8 +46,10 @@
 <div class="table_div">
   <div id="searchParam"  shiro:hasPermission="comAbout:list">
     <div class="layui-form-item">
-      <div class="layui-input-inline">
-        <input type="text" id="key" class="layui-input"  autocomplete="off" placeholder="请输入">
+        <label class="layui-form-label">标题</label>
+
+        <div class="layui-input-inline">
+        <input type="text" id="name" class="layui-input"  autocomplete="off" placeholder="请输入">
       </div>
 
       <div class="layui-input-inline ">
@@ -77,6 +69,7 @@
 </script>
 <script type="text/html" id="tool">
   <a class="layui-btn layui-btn-xs" lay-event="edit" shiro:hasPermission="comAbout:update">编辑</a>
+  <a class="layui-btn layui-btn-xs" lay-event="addPic" shiro:hasPermission="comAbout:update">添加图片</a>
   <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" shiro:hasPermission="comAbout:delete">删除</a>
 </script>
 
@@ -119,11 +112,9 @@
           {type: 'checkbox', fixed: 'left'},
           {field: 'id', title: 'id', sort: true},
           {field: 'name', title: '标题', sort: true},
-          {field: 'textValue', title: '文本', sort: true},
-          {field: 'remark', title: '备注', sort: true},
-          {field: 'createTime', title: '创建时间', sort: true},
+          {field: 'textValue', title: '详细介绍', sort: true},
           {field: 'sort', title: '排序', sort: true},
-          {width: 120, toolbar: "#tool", title: '操作'}
+          {width: 200, toolbar: "#tool", title: '操作'}
         ]
       ]
       , toolbar: '#toolbar'
@@ -153,8 +144,6 @@
           $(".operation input[name=id]").val("");
           $(".operation input[name=name]").val("");
           $(".operation input[name=textValue]").val("");
-          $(".operation input[name=remark]").val("");
-          $(".operation input[name=createTime]").val("");
           $(".operation input[name=sort]").val("");
           break;
       };
@@ -174,11 +163,23 @@
           $(".title").html("编辑");
           $(".operation input[name=id]").val(data.id);
           $(".operation input[name=name]").val(data.name);
-          $(".operation input[name=textValue]").val(data.textValue);
-          $(".operation input[name=remark]").val(data.remark);
-          $(".operation input[name=createTime]").val(data.createTime);
+            $('#textValue').val(data.textValue);
+
           $(".operation input[name=sort]").val(data.sort);
           break;
+          case 'addPic':
+              /* window.parent.active.tabDelete(tabId);
+               window.parent.active.tabAdd("/index/comviewDetail", tabId, "品牌观新增")
+               window.parent.active.tabChange(tabId);*/
+              var index = layer.open({
+                  type: 2,
+                  title: '新增图片',
+                  content: '/index/comviewFileList?tableName=comAbout&&id='+obj.data.id,
+                  area: ['85%', '85%'],
+                  maxmin: true,
+
+              });
+              break;
       }
     });
 
@@ -187,7 +188,7 @@
       //原先分页limit
       var exportParams = {
         limit: 10000,
-        key: $("#key").val()
+        name: $("#name").val()
       };
       CoreUtil.sendPost("/comAbout/listByPage", exportParams, function (res) {
         //初始化渲染数据
@@ -244,7 +245,7 @@
     //这里以搜索为例
     tableIns1.reload({
       where: { //设定异步数据接口的额外参数，任意设
-        key: $("#key").val()
+          name: $("#name").val()
       }
       , page: {
         curr: 1 //重新从第 1 页开始

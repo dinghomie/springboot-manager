@@ -26,23 +26,17 @@ import com.company.project.service.ComContrctService;
  * @email *****@mail.com
  * @date 2021-05-11 17:18:11
  */
-@Controller
-@RequestMapping("/")
+@RestController
+@RequestMapping("/comContrct")
 public class ComContrctController {
     @Autowired
     private ComContrctService comContrctService;
 
 
-    /**
-    * 跳转到页面
-    */
-    @GetMapping("/index/comContrct")
-    public String comContrct() {
-        return "comcontrct/list";
-        }
+
 
     @ApiOperation(value = "新增")
-    @PostMapping("comContrct/add")
+    @PostMapping("/add")
     @RequiresPermissions("comContrct:add")
     @ResponseBody
     public DataResult add(@RequestBody ComContrctEntity comContrct){
@@ -51,7 +45,7 @@ public class ComContrctController {
     }
 
     @ApiOperation(value = "删除")
-    @DeleteMapping("comContrct/delete")
+    @DeleteMapping("/delete")
     @RequiresPermissions("comContrct:delete")
     @ResponseBody
     public DataResult delete(@RequestBody @ApiParam(value = "id集合") List<String> ids){
@@ -60,7 +54,7 @@ public class ComContrctController {
     }
 
     @ApiOperation(value = "更新")
-    @PutMapping("comContrct/update")
+    @PutMapping("/update")
     @RequiresPermissions("comContrct:update")
     @ResponseBody
     public DataResult update(@RequestBody ComContrctEntity comContrct){
@@ -69,7 +63,7 @@ public class ComContrctController {
     }
 
     @ApiOperation(value = "查询分页数据")
-    @PostMapping("comContrct/listByPage")
+    @PostMapping("/listByPage")
     @RequiresPermissions("comContrct:list")
     @ResponseBody
     public DataResult findListByPage(@RequestBody ComContrctEntity comContrct){
