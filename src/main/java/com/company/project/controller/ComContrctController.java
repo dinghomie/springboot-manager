@@ -2,6 +2,7 @@ package com.company.project.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.company.project.entity.ComIndexEntity;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ import com.company.project.service.ComContrctService;
  * @date 2021-05-11 17:18:11
  */
 @RestController
-@RequestMapping("/comContrct")
+@RequestMapping("/")
 public class ComContrctController {
     @Autowired
     private ComContrctService comContrctService;
@@ -36,16 +37,23 @@ public class ComContrctController {
 
 
     @ApiOperation(value = "新增")
-    @PostMapping("/add")
+    @PostMapping("/comContrct/add")
     @RequiresPermissions("comContrct:add")
     @ResponseBody
     public DataResult add(@RequestBody ComContrctEntity comContrct){
-        comContrctService.save(comContrct);
-        return DataResult.success();
+        LambdaQueryWrapper<ComContrctEntity> queryWrapper = Wrappers.lambdaQuery();
+        List<ComContrctEntity> list =comContrctService.list(queryWrapper);
+        if(list.size()>0){
+            return DataResult.fail("请勿重复添加");
+        }else{
+            comContrctService.save(comContrct);
+            return DataResult.success();
+        }
+
     }
 
     @ApiOperation(value = "删除")
-    @DeleteMapping("/delete")
+    @DeleteMapping("/comContrct/delete")
     @RequiresPermissions("comContrct:delete")
     @ResponseBody
     public DataResult delete(@RequestBody @ApiParam(value = "id集合") List<String> ids){
@@ -54,7 +62,7 @@ public class ComContrctController {
     }
 
     @ApiOperation(value = "更新")
-    @PutMapping("/update")
+    @PutMapping("/comContrct/update")
     @RequiresPermissions("comContrct:update")
     @ResponseBody
     public DataResult update(@RequestBody ComContrctEntity comContrct){
@@ -63,7 +71,7 @@ public class ComContrctController {
     }
 
     @ApiOperation(value = "查询分页数据")
-    @PostMapping("/listByPage")
+    @PostMapping("/comContrct/listByPage")
     @RequiresPermissions("comContrct:list")
     @ResponseBody
     public DataResult findListByPage(@RequestBody ComContrctEntity comContrct){
@@ -74,5 +82,17 @@ public class ComContrctController {
         IPage<ComContrctEntity> iPage = comContrctService.page(page, queryWrapper);
         return DataResult.success(iPage);
     }
+    @ApiOperation(value = "anon-详情")
+    @GetMapping("/anon/comContrct/getOne")
+    @ResponseBody
+    public DataResult getOne(){
+        LambdaQueryWrapper<ComContrctEntity> queryWrapper = Wrappers.lambdaQuery();
+        List<ComContrctEntity> list =comContrctService.list(queryWrapper);
+        if(list.size()>0){
+            return DataResult.success(list.get(0));
+        }else{
+            return DataResult.success();
+        }
 
+    }
 }

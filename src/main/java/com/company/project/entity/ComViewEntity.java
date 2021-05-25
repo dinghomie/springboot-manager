@@ -73,5 +73,5 @@ public class ComViewEntity extends BaseEntity implements Serializable {
 	private Integer sort;
 
 	@TableField(exist = false)
-	private List<ComViewFilesEntity> comViewFilesEntityList;
+	private List<SysFilesEntity> sysFilesEntityList;
 }

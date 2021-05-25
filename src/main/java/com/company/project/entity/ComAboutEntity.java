@@ -8,6 +8,7 @@ import com.company.project.entity.BaseEntity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import lombok.Data;
 
@@ -59,5 +60,6 @@ public class ComAboutEntity extends BaseEntity implements Serializable {
 	@TableField("sort")
 	private Integer sort;
 
-
+	@TableField(exist = false)
+	private List<SysFilesEntity> sysFilesEntityList;
 }

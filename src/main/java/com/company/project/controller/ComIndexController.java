@@ -30,14 +30,14 @@ import com.company.project.service.ComIndexService;
  * @date 2021-05-11 17:18:10
  */
 @RestController
-@RequestMapping("/comIndex")
+@RequestMapping("/")
 public class ComIndexController {
     @Autowired
     private ComIndexService comIndexService;
 
 
     @ApiOperation(value = "新增")
-    @PostMapping("/add")
+    @PostMapping("/comIndex/add")
     @RequiresPermissions("comIndex:add")
     @ResponseBody
     public DataResult add(@RequestBody ComIndexEntity comIndex){
@@ -47,7 +47,7 @@ public class ComIndexController {
     }
 
     @ApiOperation(value = "删除")
-    @DeleteMapping("/delete")
+    @DeleteMapping("/comIndex/delete")
     @RequiresPermissions("comIndex:delete")
     @ResponseBody
     public DataResult delete(@RequestBody @ApiParam(value = "id集合") List<String> ids){
@@ -56,7 +56,7 @@ public class ComIndexController {
     }
 
     @ApiOperation(value = "更新")
-    @PutMapping("/update")
+    @PutMapping("/comIndex/update")
     @RequiresPermissions("comIndex:update")
     @ResponseBody
     public DataResult update(@RequestBody ComIndexEntity comIndex){
@@ -65,7 +65,7 @@ public class ComIndexController {
     }
 
     @ApiOperation(value = "查询分页数据")
-    @PostMapping("/listByPage")
+    @PostMapping("/comIndex/listByPage")
     @RequiresPermissions("comIndex:list")
     @ResponseBody
     public DataResult findListByPage(@RequestBody ComIndexEntity comIndex){
@@ -79,4 +79,18 @@ public class ComIndexController {
         return DataResult.success(iPage);
     }
 
+    @ApiOperation(value = "anon-详情")
+    @GetMapping("/anon/comIndex/getOne")
+    @ResponseBody
+    public DataResult getOne(){
+        LambdaQueryWrapper<ComIndexEntity> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.orderByDesc(ComIndexEntity::getSort);
+        List<ComIndexEntity> list =comIndexService.list(queryWrapper);
+        if(list.size()>0){
+            return DataResult.success(list.get(0));
+        }else{
+            return DataResult.success();
+        }
+
+    }
 }
